@@ -1,5 +1,6 @@
 import React from 'react'
-export const List = ({list}) => {
+export const List = ({list,users}) => {
+    console.log(list)
     return <table>
         <thead>
             <tr>
@@ -9,9 +10,10 @@ export const List = ({list}) => {
         </thead>
         <tbody>
             {
-                list.map(project=><tr>
+                list.map(project=><tr key={project.id}>
                     <td>{project.name}</td>
-                    <td>{project.personName}</td>
+                    {/* undefined.name */}
+                    <td>{users.find(user=>user.id===project.personId)?.name||'未知'}</td>
                 </tr>)
             }
         </tbody>
