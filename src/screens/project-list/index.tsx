@@ -4,11 +4,10 @@ import { List } from './list'
 import { SearchPanel } from './search-panel'
 import qs from "qs";
 
-
 // webpack打包后的结果
 const apiUrl=process.env.REACT_APP_API_URL
 
-export const ProjectListScreen = (params) => {
+export const ProjectListScreen = () => {
     const [param, setParam] = useState({name:'',personId:''})
     const [list, setList] = useState([])
     const debouncedParam=useDebounce(param,2000)
