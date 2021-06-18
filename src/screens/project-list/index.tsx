@@ -3,25 +3,20 @@ import { cleanObject, useDebounce, useMount } from "utils";
 import { List } from "./list";
 import { SearchPanel } from "./search-panel";
 import { useHttp } from "utils/http";
-import { Row } from "antd";
-
+import { Row, Typography } from "antd";
+import { useAsync } from "utils/use-async";
+import { Project } from "screens/project-list/list";
+import { useProjects } from "utils/project";
+import { useUsers } from "utils/user";
 
 // webpack打包后的结果
 const apiUrl = process.env.REACT_APP_API_URL;
 
 export const ProjectListScreen = () => {
   const [param, setParam] = useState({ name: "", personId: "" });
-  const [list, setList] = useState([]);
-  const debouncedParam = useDebounce(param, 2000);
-  const [users, setUsers] = useState([]);
-  const client = useHttp();
-  useEffect(() => {
-    client("projects", { data: cleanObject(debouncedParam) }).then(setList);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedParam]);
-  useMount(() => {
-    client("users").then(setUsers);
-  });
+  const debouncedParam = useDebounce(param, 200);
+  const { isLoading, error, data: list } = useProjects(debouncedParam);
+  const { data: users } = useUsers();
   return (
     <div>
       <Row>
@@ -30,9 +25,16 @@ export const ProjectListScreen = () => {
       <SearchPanel
         param={param}
         setParam={setParam}
-        users={users}
+        users={users || []}
       ></SearchPanel>
-      <List list={list} users={users}></List>
+      {error ? (
+        <Typography.Text type="danger">{error.message}</Typography.Text>
+      ) : null}
+      <List
+        loading={isLoading}
+        dataSource={list || []}
+        users={users || []}
+      ></List>
     </div>
   );
 };
