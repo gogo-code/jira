@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { cleanObject, useDebounce, useMount } from "utils";
+import { cleanObject, useDebounce, useDocumentTitle, useMount } from "utils";
 import { List } from "./list";
 import { SearchPanel } from "./search-panel";
 import { useHttp } from "utils/http";
@@ -13,6 +13,8 @@ import { useUsers } from "utils/user";
 const apiUrl = process.env.REACT_APP_API_URL;
 
 export const ProjectListScreen = () => {
+  useDocumentTitle("项目列表", false);
+
   const [param, setParam] = useState({ name: "", personId: "" });
   const debouncedParam = useDebounce(param, 200);
   const { isLoading, error, data: list } = useProjects(debouncedParam);
